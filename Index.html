@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberSane Link Security Checker</title>
+  <style>
+    /* Global styles */
+
+    nav a {
+      margin-left: 20px;
+      color: #ccc;
+      text-decoration: none;
+    }
+    nav {
+  background-color: #1c0931; /* Or whatever the dark blue is */
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+
+
+     header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 116px;
+      background-color: #1a0f38;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+     
+      background: #eaedf0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+
+   
+    }
+
+    /* Card layout */
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(121, 48, 48, 0.1);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      padding: 10px 15px;
+      width: 80%;
+      max-width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #7089a3;
+      color: rgb(8, 156, 224);
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #09d324;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 10px;
+
+    }
+
+    .secure {
+      color: #28a745;
+      background-color: #e6ffed;
+    }
+
+    .insecure {
+      color: #dc3545;
+      background-color: #ffeaea;
+    }
+
+    .unknown {
+      color: #6c757d;
+      background-color: #f0f0f0;
+    }
+
+    
+  </style>
+</head>
+<body>
+
+   <header>
+    
+
+   <nav>
+  <a href="index.html">Scan Link</a>
+   <a href="front end.html">Dashboard</a>
+</nav>
+
+   
+        
+ 
+    </head>
+
+  <div class="container">
+    <h2>🔍 Link Security Checker</h2>
+
+    <input type="text" id="urlInput" placeholder="Enter a link (e.g., https://example.com)">
+    <br>
+    <button onclick="checkLink()">Check Link</button>
+
+    <p id="result"></p>
+  </div>
+
+  <script>
+  function isPhishingLike(url) {
+    
+     const phishingPatterns = [
+  /[0-9]{2,}.*\.com/,                               // suspicious numbers in domain
+  /@/,                                              // redirect trick
+  /xn--/,                                           
+  /\.(tk|ml|cf|gq|ga|ru|cn|top|xyz|zip|click)$/,     // risky domains
+  /(login|verify|update|secure|account|bank|paypal|signin|webscr|confirm|password|reset|webmail|support|unlock|limit|validate)/,
+  /\.\./,                                          
+  /%00|%20|%2e|%3c|%3e/,                            
+  /[^\w\d\-\.]/,                                   
+  /\s/,                                            
+  /\.com\.[a-z]{2,}/,  
+
+
+  
+  // fake .com subdomain
+];
+    
+    return phishingPatterns.some(pattern => pattern.test(url.toLowerCase()));
+  }
+
+  function checkLink() {
+    const url = document.getElementById("urlInput").value.trim();
+    const result = document.getElementById("result");
+
+    // Reset classes
+    result.className = "";
+
+    // Basic HTTPS or HTTP check
+    if (url.startsWith("https://")) {
+      result.className = "secure";
+      
+      result.innerHTML = `🔒 <strong>${url}</strong> is <strong>secure</strong> (HTTPS)`;
+      alert("✅ This link is secure. You can proceed.");
+      alert("ℹ️ HTTPS stands for 'Hypertext Transfer Protocol Secure'. It encrypts your data to protect it from hackers or eavesdroppers.");
+    } else if (url.startsWith("http://")) {
+      result.className = "insecure";
+      result.innerHTML = `⚠️ <strong>${url}</strong> is <strong>NOT secure</strong> (HTTP)`;
+      alert("⚠️ This link is NOT secure. Please do not proceed.");
+      alert("⚠️ HTTP does not encrypt your connection. Your data can be intercepted. Always prefer HTTPS.");
+    } else {
+      result.className = "unknown";
+      result.innerHTML = `❓ <strong>${url}</strong> is <strong>invalid or missing protocol</strong>`;
+      alert("❓ This link appears to be invalid or missing HTTPS/HTTP.");
+      alert("💡 Make sure your link starts with HTTPS to stay safe.");
+      return;
+    }
+
+    // Phishing pattern check
+    if (isPhishingLike(url)) {
+      alert("🚨 WARNING: This link contains patterns commonly found in phishing websites.");
+      alert("⚠️ It may include suspicious words, unusual subdomains, or risky domain endings like .tk or .ml. Proceed with caution.");
+    }
+  }
+</script>
+
+
+
+</body>
+</html>
